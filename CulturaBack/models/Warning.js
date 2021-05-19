@@ -32,4 +32,4 @@ const Warning = new mongoose.Schema({
     }
 })
 
-modelu.export = Warning;
+module.export = Warning;

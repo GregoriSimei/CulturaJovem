@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
-const db = mongoose.connect("mongodb+srv://traininggreg:GiSiMaSs21-*@mongotests.cl2v0.mongodb.net/CulturaJovem?retryWrites=true&w=majority",
+const DB_URL = "mongodb+srv://traininggreg:GiSiMaSs21-*@mongotests.cl2v0.mongodb.net/CulturaJovem?retryWrites=true&w=majority";
+
+const db = mongoose.connect(DB_URL,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
