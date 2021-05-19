@@ -5,7 +5,7 @@ class CultController {
 
     async save(req, resp){
         var cult = req.body;
-        var result = await cultService.validateNewCult(cult);
+        var [response, validation] = await cultService.validateNewCult(cult);
         resp.status(500).json({status: 500, message: "error"});
     }
 
