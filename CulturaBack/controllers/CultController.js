@@ -5,8 +5,9 @@ class CultController {
 
     async save(req, resp){
         var cult = req.body;
-        var [response, validation] = await cultService.validateNewCult(cult);
-        resp.status(500).json({status: 500, message: "error"});
+        var response = await cultService.save(cult);
+        var statusCode = response.status;
+        resp.status(statusCode).json(response);
     }
 
     async getAll(req, resp){
