@@ -19,7 +19,8 @@ const Cults = new mongoose.Schema({
         required: [true, "The date is required"]
     },
     period : {
-        type: String
+        type: String,
+        enum: ["morning", "evening"]
     },
     deleted : {
         type: Boolean

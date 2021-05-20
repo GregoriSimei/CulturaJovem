@@ -25,7 +25,7 @@ class CultService{
 
         // If the request passes the validations, it will return a success messsage
         if(validation){
-            this.#saveOrUpdate(cult);
+            this.#saveOrUpdate(cult, "create");
             response = { status: 200, message: "Success"};
         }
         
@@ -40,20 +40,21 @@ class CultService{
 
     async #checkIfCultExist(cult){
         
-        var newCultPeriod = cult.period;
-        var newCultDate = cult.date;
+        var period = cult.period;
+        var date = cult.date;
 
-        var cult = await cultDB.find({date: newCultDate, period: newCultPeriod});
+        var cult = await cultDB.findOne({ date: date, period: period});
+
         var exist = cult ? true : false;
         return exist;
     }
 
-    async #saveOrUpdate(cult){
+    async #saveOrUpdate(cult, type){
         try{
-            cult = await cultDB.create(cult);
+            cult = type == "create" ? await cultDB.create(cult): await cultDB.updateOne(cult);
         }
         catch{
-
+            
         }
 
         return cult;
