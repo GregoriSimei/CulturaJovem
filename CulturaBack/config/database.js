@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
+const dbconfig = require("../passwords.json");
 
-const db = mongoose.connect("mongodb+srv://traininggreg:GiSiMaSs21-*@mongotests.cl2v0.mongodb.net/CulturaJovem?retryWrites=true&w=majority",
+var db = dbconfig.database;
+var user = db.user;
+var password = db.password;
+var collection = db.name;
+
+const DB_URL = `mongodb+srv://${user}:${password}@mongotests.cl2v0.mongodb.net/${collection}?retryWrites=true&w=majority`;
+
+const database = mongoose.connect(DB_URL,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -19,4 +27,4 @@ mongoose.connection.on("disconnected", () => {
     console.log("Database Application Disconnected");
 });
 
-module.exports = db;
+module.exports = database;

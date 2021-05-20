@@ -5,6 +5,9 @@ const Warning = require("./Warning.js");
 const Schedule = require("./Schedule.js");
 
 const Cults = new mongoose.Schema({
+    title: {
+        type: String
+    },
     message : Message,
     warnings : [Warning],
     schedules : [Schedule],
@@ -16,7 +19,8 @@ const Cults = new mongoose.Schema({
         required: [true, "The date is required"]
     },
     period : {
-        type: String
+        type: String,
+        enum: ["morning", "evening"]
     },
     deleted : {
         type: Boolean
