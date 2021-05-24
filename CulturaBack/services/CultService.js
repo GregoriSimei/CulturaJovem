@@ -9,7 +9,7 @@ class CultService{
         var response = {};
 
         // Check that the created in parameter is not filled
-        var checkCreatedIn = cult.createdIn != null ? true : false;
+        var checkCreatedIn = cult.createdIn != null;
         if(checkCreatedIn){
             response = { status: 400, message: "Bad request"};
             return response;
@@ -21,8 +21,6 @@ class CultService{
             validation = false;
             response = { status: 400, message: "Period is not valid"};
         }
-
-        var checkDate = await this.#checkDate(cult);
 
         // Check that the date and period of cult dont exist
         // Case the period validation got a false response, the program will not check if the cult exist
@@ -44,19 +42,6 @@ class CultService{
     async update(cult){
         var checkPeriod = this.#checkPeriod(cult);
         console.log(checkPeriod);
-    }
-
-    async #checkDate(cult, type){
-        const atualDate = new Date();
-
-        const cultDate = cult.date;
-        const date = new Date(cultDate);
-        
-        if(type != "create"){
-
-        }
-
-        console.log(date);
     }
 
     async #checkPeriod(cult){
