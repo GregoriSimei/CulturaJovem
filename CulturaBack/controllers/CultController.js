@@ -19,8 +19,16 @@ class CultController {
 
     async update(req, resp){
         var cult = req.body;
-        var response = await cultService.update(cult);
-        resp.status(200).json({status: 200, message: "Route working"});
+
+        try{
+            var response = await cultService.update(cult);
+        }
+        catch{
+            var response = {status: 400, message: "Bad Request"};
+        }
+        
+        var statusCode = response.status;
+        resp.status(statusCode).json(response);
     }
 
     async getAll(req, resp){

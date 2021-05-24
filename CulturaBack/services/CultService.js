@@ -40,8 +40,34 @@ class CultService{
     }
 
     async update(cult){
+        var id = cult.id;
+        response = {status: 400, message: "Bad Request"};
+
+        // Geting the actual state of cult
+        var [exist, actualCult] = this.getById(id);
+
+        // check that the period is right
         var checkPeriod = this.#checkPeriod(cult);
-        console.log(checkPeriod);
+
+        // check that the createdIn parameter is the same
+        var actualCultCreation = actualCult.createdIn;
+        var updatedCultCreation = cult.createdIn;
+        var checkCreatedIn = actualCultCreation == updatedCultCreation;
+
+        return response;
+    }
+
+    async getById(id){
+        var exist = false;
+        var response = {status: 400, message: "Bad Request"};
+        var cult = await cultDB.findById(id);
+
+        if(cult){
+            exist = true;
+            response = cult;
+        }
+
+        return [exist, response];
     }
 
     async #checkPeriod(cult){
