@@ -11,7 +11,11 @@ class CultService{
         // Check that the created in parameter is not filled
         var checkCreatedIn = cult.createdIn != null;
         if(checkCreatedIn){
-            response = { status: 400, message: "Bad request"};
+            response = { 
+                status: 400, 
+                message: "Bad request"
+            };
+
             return response;
         }
 
@@ -19,7 +23,10 @@ class CultService{
         var checkPeriod = await this.#checkPeriod(cult);
         if(!checkPeriod){
             validation = false;
-            response = { status: 400, message: "Period is not valid"};
+            response = { 
+                status: 400, 
+                message: "Period is not valid"
+            };
         }
 
         // Check that the date and period of cult dont exist
@@ -27,39 +34,52 @@ class CultService{
         var cultExist = checkPeriod ? await this.#checkIfCultExist(cult) : false;
         if(cultExist){
             validation = false;
-            response = { status: 400, message: "There is already a cult on this date and period"};
+            response = { 
+                status: 400, 
+                message: "There is already a cult on this date and period"
+            };
         }
 
         // If the request passes the validations, it will return a success messsage
         if(validation){
             this.#saveOrUpdate(cult, TYPE);
-            response = { status: 200, message: "Success"};
+            response = { 
+                status: 200, 
+                message: "Success"
+            };
         }
         
         return response;
     }
 
     async update(cult){
+        const TYPE = "update";
         var id = cult.id;
-        response = {status: 400, message: "Bad Request"};
+        var response = {
+            status: 400, 
+            message: "Bad Request"
+        };
 
         // Geting the actual state of cult
-        var [exist, actualCult] = this.getById(id);
+        var [exist, dbCult] = await this.getById(id);
 
         // check that the period is right
-        var checkPeriod = this.#checkPeriod(cult);
+        var checkPeriod = await this.#checkPeriod(cult);
 
-        // check that the createdIn parameter is the same
-        var actualCultCreation = actualCult.createdIn;
-        var updatedCultCreation = cult.createdIn;
-        var checkCreatedIn = actualCultCreation == updatedCultCreation;
+        response = exist && checkPeriod ? 
+                    await this.#saveOrUpdate(cult, TYPE) : 
+                    response;
 
         return response;
     }
 
     async getById(id){
         var exist = false;
-        var response = {status: 400, message: "Bad Request"};
+        var response = {
+            status: 400, 
+            message: "Bad Request"
+        };
+
         var cult = await cultDB.findById(id);
 
         if(cult){
@@ -73,7 +93,10 @@ class CultService{
     async #checkPeriod(cult){
         var period = cult.period;
         period = period.toLowerCase();
-        var valid = period == "morning" || period == "evening" ? true : false;
+
+        var valid = period == "morning" || 
+                    period == "evening";
+
         return valid;
     }
 
@@ -81,7 +104,8 @@ class CultService{
         var period = cult.period;
         var date = cult.date;
 
-        var cult = await cultDB.findOne({ date: date, period: period});
+        var cult = await cultDB.findOne({ date: date, 
+                                          period: period });
 
         var exist = cult ? true : false;
         return exist;
@@ -89,7 +113,9 @@ class CultService{
 
     async #saveOrUpdate(cult, type){
         try{
-            cult = type == "create" ? await cultDB.create(cult): await cultDB.updateOne(cult);
+            cult = type == "create" ? 
+                    await cultDB.create(cult): 
+                    await cultDB.updateOne({_id: cult.id}, {$set: cult});
         }
         catch{
 
