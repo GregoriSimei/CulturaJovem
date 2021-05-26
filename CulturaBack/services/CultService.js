@@ -69,9 +69,21 @@ class CultService{
         // check that cult was not deleted
         var checkDeleted = dbCult.deleted;
 
-        response = exist && checkPeriod && !checkDeleted? 
-                    await this.#saveOrUpdate(cult, TYPE) : 
-                    response;
+        // verify that all validations are right to do the update
+        // after that, check if the update response has returned a modification
+        if (exist && checkPeriod && !checkDeleted){
+            var respUpdate = await this.#saveOrUpdate(cult, TYPE);
+            var updated = respUpdate.nModified;
+            response = updated = 1 ? 
+            {
+                status: 200, 
+                message: "Success"
+            } :
+            {
+                status: 400,
+                message: "Server error"
+            };
+        }
 
         return response;
     }
