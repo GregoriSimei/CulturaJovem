@@ -74,6 +74,7 @@ class CultService{
         if (exist && checkPeriod && !checkDeleted){
             var respUpdate = await this.#saveOrUpdate(cult, TYPE);
             var updated = respUpdate.nModified;
+            
             response = updated = 1 ? 
             {
                 status: 200, 
