@@ -66,7 +66,10 @@ class CultService{
         // check that the period is right
         var checkPeriod = await this.#checkPeriod(cult);
 
-        response = exist && checkPeriod ? 
+        // check that cult was not deleted
+        var checkDeleted = dbCult.deleted;
+
+        response = exist && checkPeriod && !checkDeleted? 
                     await this.#saveOrUpdate(cult, TYPE) : 
                     response;
 
