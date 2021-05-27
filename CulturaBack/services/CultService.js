@@ -89,6 +89,11 @@ class CultService{
         return response;
     }
 
+    async getAll(){
+        var cults = await cultDB.find({deleted: false});
+        return cults;
+    }
+
     async getById(id){
         var exist = false;
         var response = {
