@@ -4,6 +4,6 @@ const CultsController = require("../controllers/CultController.js");
 
 router.post("/cult", CultsController.save);
 router.put("/cult", CultsController.update);
-router.get("/cult", CultsController.getAll);
+router.get("/cult", CultsController.getCult);
 
 module.exports = router;

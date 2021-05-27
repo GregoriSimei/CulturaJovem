@@ -61,7 +61,8 @@ class CultService{
         };
 
         // Geting the actual state of cult
-        var [exist, dbCult] = await this.getById(id);
+        var cultDb = await this.getById(id);
+        var checkCult = cultDb ? true : false;
 
         // check that the period is right
         var checkPeriod = await this.#checkPeriod(cult);
@@ -71,7 +72,7 @@ class CultService{
 
         // verify that all validations are right to do the update
         // after that, check if the update response has returned a modification
-        if (exist && checkPeriod && !checkDeleted){
+        if (checkCult && checkPeriod && !checkDeleted){
             var respUpdate = await this.#saveOrUpdate(cult, TYPE);
             var updated = respUpdate.nModified;
             
@@ -89,21 +90,17 @@ class CultService{
         return response;
     }
 
+    async getAll(){
+        // Getting all the cults not deleted
+        var cults = await cultDB.find({deleted: false});
+        return cults;
+    }
+
     async getById(id){
-        var exist = false;
-        var response = {
-            status: 400, 
-            message: "Bad Request"
-        };
-
-        var cult = await cultDB.findById(id);
-
-        if(cult){
-            exist = true;
-            response = cult;
-        }
-
-        return [exist, response];
+        // Getting cult by id
+        var cult = await cultDB.findOne({_id : id, 
+                                         deleted : false});
+        return cult;
     }
 
     async #checkPeriod(cult){

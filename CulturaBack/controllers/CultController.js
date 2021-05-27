@@ -26,14 +26,13 @@ class CultController {
         resp.status(200).json(response);
     }
 
-    async getAll(req, resp){
-        try{
-            var result = await cultDB.find();
-            resp.status(200).json(result);
-        }
-        catch{
-            resp.status(500).json({status: 500, message: "error"});
-        }
+    async getCult(req, resp){
+        var idCult = req.query.id;
+        var response = idCult ? 
+                    await cultService.getById(idCult) :
+                    await cultService.getAll();
+
+        resp.status(200).json(response);
     }
 
 }
