@@ -23,7 +23,8 @@ const Cults = new mongoose.Schema({
         enum: ["morning", "evening"]
     },
     deleted : {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     createdIn: {
         type: Date,
