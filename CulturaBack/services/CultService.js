@@ -91,11 +91,13 @@ class CultService{
     }
 
     async getAll(){
+        // Getting all the cults not deleted
         var cults = await cultDB.find({deleted: false});
         return cults;
     }
 
     async getById(id){
+        // Getting cult by id
         var cult = await cultDB.findById(id);
         return cult;
     }
