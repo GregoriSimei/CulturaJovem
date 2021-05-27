@@ -98,7 +98,8 @@ class CultService{
 
     async getById(id){
         // Getting cult by id
-        var cult = await cultDB.findById(id);
+        var cult = await cultDB.findOne({_id : id, 
+                                         deleted : false});
         return cult;
     }
 
