@@ -20,9 +20,9 @@ describe('Test Cult Service', ()=>{
 
     it('Create and Save Cult Successfully', async ()=>{
         const cult = {
-            title: "Cult Tests",
+            title: "Cult Tests 2",
             link : "www.teste.com.br",
-            date : new Date(),
+            date : "2021-03-03",
             period : "morning",
             deleted : false
         }
@@ -34,6 +34,10 @@ describe('Test Cult Service', ()=>{
     });
 
     afterAll(async ()=>{
+        const collections = await mongoose.connection.db.collections();
+        for (let collection of collections){
+            await collection.deleteOne();
+        }
         await mongoose.disconnect();
     })
 })
