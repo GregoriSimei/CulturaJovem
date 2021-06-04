@@ -4,12 +4,18 @@ const cultService = require('../../services/CultService');
 describe('Test Cult Service', ()=>{
 
     beforeAll(async ()=>{
-        await mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true}, (err) => {
-            if(err){
-                console.log(err);
-                process.exit(1);
+        await mongoose.connect('mongodb://localhost:27017/test', 
+            {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }, 
+            (err) => {
+                if(err){
+                    console.log(err);
+                    process.exit(1);
+                }
             }
-        })
+        )
     });
 
     it('Create and Save Cult Successfully', async ()=>{
@@ -27,7 +33,7 @@ describe('Test Cult Service', ()=>{
         expect(response.message).toBe("Success");
     });
 
-    afterAll(()=>{
-        mongoose.disconnect();
+    afterAll(async ()=>{
+        await mongoose.disconnect();
     })
 })
