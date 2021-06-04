@@ -20,7 +20,7 @@ class CultService{
         }
 
         // Check that the period parameter received is among the types expected
-        var checkPeriod = await this.#checkPeriod(cult);
+        var checkPeriod = await this.checkPeriod(cult);
         if(!checkPeriod){
             validation = false;
             response = { 
@@ -31,7 +31,7 @@ class CultService{
 
         // Check that the date and period of cult dont exist
         // Case the period validation got a false response, the program will not check if the cult exist
-        var cultExist = checkPeriod ? await this.#checkIfCultExist(cult) : false;
+        var cultExist = checkPeriod ? await this.checkIfCultExist(cult) : false;
         if(cultExist){
             validation = false;
             response = { 
@@ -42,7 +42,7 @@ class CultService{
 
         // If the request passes the validations, it will return a success messsage
         if(validation){
-            this.#saveOrUpdate(cult, TYPE);
+            this.saveOrUpdate(cult, TYPE);
             response = { 
                 status: 200, 
                 message: "Success"
@@ -65,7 +65,7 @@ class CultService{
         var checkCult = cultDb ? true : false;
 
         // check that the period is right
-        var checkPeriod = await this.#checkPeriod(cult);
+        var checkPeriod = await this.checkPeriod(cult);
 
         // check that cult was not deleted
         var checkDeleted = dbCult.deleted;
@@ -73,7 +73,7 @@ class CultService{
         // verify that all validations are right to do the update
         // after that, check if the update response has returned a modification
         if (checkCult && checkPeriod && !checkDeleted){
-            var respUpdate = await this.#saveOrUpdate(cult, TYPE);
+            var respUpdate = await this.saveOrUpdate(cult, TYPE);
             var updated = respUpdate.nModified;
             
             response = updated > 1 ? 
@@ -103,7 +103,7 @@ class CultService{
         return cult;
     }
 
-    async #checkPeriod(cult){
+    async checkPeriod(cult){
         var period = cult.period;
         period = period.toLowerCase();
 
@@ -113,7 +113,7 @@ class CultService{
         return valid;
     }
 
-    async #checkIfCultExist(cult){
+    async checkIfCultExist(cult){
         var period = cult.period;
         var date = cult.date;
 
@@ -124,7 +124,7 @@ class CultService{
         return exist;
     }
 
-    async #saveOrUpdate(cult, type){
+    async saveOrUpdate(cult, type){
         try{
             cult = type == "create" ? 
                     await cultDB.create(cult): 
