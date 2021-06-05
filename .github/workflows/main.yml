@@ -15,7 +15,7 @@ on:
       
 jobs:
   test: 
-    name: Test on Node ${{ matrix.node_version }} and $${{ matrix.is }}
+    name: Test on Node ${{ matrix.node_version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -27,10 +27,10 @@ jobs:
     - name: Git Checkout
       uses: actions/checkout@v1
       
-    - name: Use Node.js  VERSION ${{ matrix.node-version }}
+    - name: Use Node.js VERSION ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with: 
-        node-version: $${{ matrix.node-version }}
+        node-version: ${{ matrix.node-version }}
       
     - name: Start MongoDB
       uses: supercharge/mongodb-github-action@1.6.0
