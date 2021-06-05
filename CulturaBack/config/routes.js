@@ -1,9 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const CultsController = require("../controllers/CultController.js");
+const express = require('express');
+const app = express();
+const CultRoute = require('../routes/CultRoute');
 
-router.post("/cult", CultsController.save);
-router.put("/cult", CultsController.update);
-router.get("/cult", CultsController.getCult);
+app.use("/cult", CultRoute);
 
-module.exports = router;
+module.exports = app;
