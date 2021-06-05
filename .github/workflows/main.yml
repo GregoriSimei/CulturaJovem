@@ -31,5 +31,6 @@ jobs:
       
     - name: Install dependences and run tests
       run: |
+        cd CulturaBack
         npm install
         npm test
