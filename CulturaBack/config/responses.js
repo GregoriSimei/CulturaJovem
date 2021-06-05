@@ -1,25 +1,25 @@
 class Responses {
 
-    async successResponse(message, data){
+    async successResponse(data){
         return {
             status: 0,
-            message: message,
+            message: "Success",
             data: data
         }
     }
 
-    async erroResponse(message, data){
+    async erroResponse(data){
         return {
             status: 1,
-            message: message,
+            message: "Server Error",
             data: data
         }
     }
 
-    async badRequestResponse(message, data){
+    async badRequestResponse(data){
         return {
             status: 2,
-            message: message,
+            message: "Bad Request",
             data: data
         }
     }
