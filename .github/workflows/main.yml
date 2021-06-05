@@ -1,0 +1,45 @@
+name: CI - Node
+
+on:
+  push: 
+    branches:
+      - master
+      - feature/*
+      - bugfix/*
+      
+  pull_request:
+    branches:
+      - master
+      - feature/*
+      - bugfix/*
+      
+jobs:
+  test: 
+    name: Test on Node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: ['14']
+        os: [ubuntu-latest]
+        mongodb-version: ['4.4']
+        
+    steps:
+    - name: Git Checkout
+      uses: actions/checkout@v1
+      
+    - name: Use Node.js VERSION ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with: 
+        node-version: ${{ matrix.node-version }}
+      
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.6.0
+      with:
+        mongodb-version: ${{ matrix.mongodb-version }}
+      
+    - name: Install dependences and run tests
+      run: |
+        cd CulturaBack
+        npm install
+        npm install jest
+        npm test
