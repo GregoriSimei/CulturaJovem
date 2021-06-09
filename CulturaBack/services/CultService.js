@@ -3,53 +3,25 @@ const cultDB = require("../models/Cults.js");
 class CultService{
 
     async save(cult){
-        const TYPE = "create";
+        var [status, message] = cult.id != null ? 
+            await this.update(cult):
+            await this.create(cult);
 
-        var validation = true;
-        var response = {};
+        return [status, message];
+    }
 
-        // Check that the created in parameter is not filled
-        var checkCreatedIn = cult.createdIn != null;
-        if(checkCreatedIn){
-            response = { 
-                status: 400, 
-                message: "Bad request"
-            };
-
-            return response;
-        }
-
-        // Check that the period parameter received is among the types expected
-        var checkPeriod = await this.checkPeriod(cult);
-        if(!checkPeriod){
-            validation = false;
-            response = { 
-                status: 400, 
-                message: "Period is not valid"
-            };
-        }
-
+    async create(cult){
         // Check that the date and period of cult dont exist
-        // Case the period validation got a false response, the program will not check if the cult exist
-        var cultExist = checkPeriod ? await this.checkIfCultExist(cult) : false;
-        if(cultExist){
-            validation = false;
-            response = { 
-                status: 400, 
-                message: "There is already a cult on this date and period"
-            };
-        }
+        var cultExist = await this.checkIfCultExist(cult);
 
-        // If the request passes the validations, it will return a success messsage
-        if(validation){
-            this.saveOrUpdate(cult, TYPE);
-            response = { 
-                status: 200, 
-                message: "Success"
-            };
-        }
-        
-        return response;
+        var [status, message]= cultExist ? 
+            await this.errorMessage(
+                400,
+                "There is a cult in this date and period"
+            ) :
+            await this.persistCult(cult);
+
+        return [status, message];
     }
 
     async update(cult){
@@ -117,26 +89,40 @@ class CultService{
         var period = cult.period;
         var date = cult.date;
 
-        var cult = await cultDB.findOne({ date: date, 
-                                          period: period });
+        var exist = false;
 
-        var exist = cult ? true : false;
+        cult = await cultDB.findOne({ date: date, 
+                                      period: period }).catch(() => (
+                                          exist = true
+                                      ));
+
         return exist;
     }
 
-    async saveOrUpdate(cult, type){
+    async persistCult(cult){
+        var status = 200;
+
         try{
-            cult = type == "create" ? 
-                    await cultDB.create(cult): 
-                    await cultDB.updateOne({_id: cult.id}, {$set: cult});
+            cult = cult.id == null ? 
+                await cultDB.create(cult):
+                await cultDB.updateOne({
+                    _id: id
+                });
         }
-        catch{
-
+        catch(err) {
+            console.log(err.errors);
+            status = 400;
         }
 
-        return cult;
+        return [status, cult];
     }
 
+    async errorMessage(status, message){
+        return [
+            status,
+            {message : message}
+        ];
+    }
 }
 
 module.exports = new CultService();

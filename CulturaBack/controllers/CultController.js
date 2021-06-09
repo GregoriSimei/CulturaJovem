@@ -5,16 +5,8 @@ class CultController {
 
     async save(req, resp){
         var cult = req.body;
-
-        try{
-            var response = await cultService.save(cult);
-            var statusCode = response.status;
-        }
-        catch{
-            var [statusCode, response] = [400, {status: 400, message: "Bad request"}];
-        }
-
-        resp.status(statusCode).json(response);
+        var [status, response] = await cultService.save(cult);
+        resp.status(status).json(response);
     }
 
     async update(req, resp){
